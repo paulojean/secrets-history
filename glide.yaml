@@ -1,0 +1,3 @@
+package: key-history
+import:
+- package: gopkg.in/src-d/go-git.v4
