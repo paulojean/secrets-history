@@ -9,6 +9,7 @@ import (
 	"regexp"
 	"flag"
 	"fmt"
+	"path/filepath"
 )
 
 func getDiff(currentHash string, repo git.Repository) object.Changes {
@@ -44,10 +45,8 @@ func takeCommitsUtil(commits object.CommitIter, takeUntilFn func(object.Commit) 
 }
 
 func getAllHashesButInitial(commits object.CommitIter) []string {
-	currentCommit, _ := commits.Next()
-
 	_, hashes := takeCommitsUtil(commits, func(commit object.Commit) bool {
-		return isNotInitialCommit(*currentCommit)
+		return isNotInitialCommit(commit)
 	})
 
 	return hashes
@@ -133,9 +132,11 @@ func main() {
 	to := flag.String("to", "", "final commit")
 	flag.Parse()
 
-	ensureRepositoryExists(*repoPath)
+	repoAbsolutePath, _ := filepath.Abs(*repoPath)
 
-	repo, _ := git.PlainOpen(*repoPath)
+	ensureRepositoryExists(repoAbsolutePath)
+
+	repo, _ := git.PlainOpen(repoAbsolutePath)
 	head, _ := repo.Head()
 
 	startCommit := getStartCommit(*head, *from)
