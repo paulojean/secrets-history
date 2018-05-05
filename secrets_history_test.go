@@ -104,7 +104,7 @@ func TestHashesToInspectFailsWhenFromIsEqualToInitialCommit(t *testing.T) {
 func TestDirtyCommitsBringsCommitsWithSecretsAddedAndRemoved(t *testing.T) {
 
 	JWT_PATTERN := regexp.MustCompile(`eyJ[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]*`)
-	expectedDirtyCommits := []string {
+	expectedDirtyCommits := []string{
 		"140e081f12e3d462113912311c375f0d4ad1c7ec",
 		"43c37ddecac9a93301d15ee2d0a56edac8fb1ad9"}
 	commits := []string{
