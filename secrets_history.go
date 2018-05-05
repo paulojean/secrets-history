@@ -1,14 +1,14 @@
 package main
 
 import (
-	"flag"
-	"fmt"
-	"regexp"
 	"strings"
 	"gopkg.in/src-d/go-git.v4"
 	"gopkg.in/src-d/go-git.v4/plumbing"
 	"gopkg.in/src-d/go-git.v4/plumbing/object"
 	"os"
+	"regexp"
+	"flag"
+	"fmt"
 )
 
 func getDiff(currentHash string, repo git.Repository) object.Changes {
@@ -34,10 +34,12 @@ func isNotInitialCommit(commit object.Commit) bool {
 func getAllHashesButInitial(commits object.CommitIter) []string {
 	var hashes []string
 	currentCommit, _ := commits.Next()
+
 	for isNotInitialCommit(*currentCommit) {
 		if isNotMergeCommit(*currentCommit) {
 			hashes = append(hashes, currentCommit.Hash.String())
 		}
+
 		currentCommit, _ = commits.Next()
 	}
 
@@ -61,60 +63,64 @@ func getAllHashesUntil(commits object.CommitIter, until string) []string {
 }
 
 func hashesToInspect(repository git.Repository, from, to string) []string {
-	var hashes []string
-	ref, _ := repository.Head()
-	c, _ := repository.CommitObject(ref.Hash())
+	log, _ := repository.Log(&git.LogOptions{Order: git.LogOrderCommitterTime})
 
-	commits := object.NewCommitPostorderIter(c, nil)
-
-	currentCommit, _ := commits.Next()
+	currentCommit, _ := log.Next()
 	for ! strings.HasPrefix(currentCommit.Hash.String(), from) {
-		currentCommit, _ = commits.Next()
+		currentCommit, _ = log.Next()
 	}
 
 	if to == "" {
-		hashes = getAllHashesButInitial(commits)
+		return getAllHashesButInitial(log)
 	} else {
-		hashes = getAllHashesUntil(commits, to)
+		return getAllHashesUntil(log, to)
 	}
-
-	return hashes
 }
 
 func exists(path string) (bool, error) {
 	_, err := os.Stat(path)
-	if err == nil { return true, nil }
-	if os.IsNotExist(err) { return false, nil }
+	if err == nil {
+		return true, nil
+	}
+	if os.IsNotExist(err) {
+		return false, nil
+	}
 	return true, err
 }
 
 func main() {
-	JWT_REGEX := regexp.MustCompile(`^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]*$`)
+
+	JWT_REGEX := regexp.MustCompile(`eyJ[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]*`)
 	var dirtyCommits []string
 
-	repoExists, err := exists(os.Args[1])
-	if ! repoExists {
-		panic("path given does not exist")
-	} else if err != nil {
-		panic(err)
-	}
-
-	repo, _ := git.PlainOpen(os.Args[1])
-
-	head, _ := repo.Head()
-
-	var from, to string
-	flag.StringVar(&from, "from", head.Hash().String(), "start commit")
-	flag.StringVar(&to, "to", "", "final commit")
+	repoPath := flag.String("path", "", "path to a local git project")
+	from := flag.String("from", "", "start commit")
+	to := flag.String("to", "", "final commit")
 	flag.Parse()
 
-	hashes := hashesToInspect(*repo, from, to)
+	fileExists, err := exists(*repoPath)
 
-	for i := 0; i < len(hashes); i++ {
-		currentCommit := hashes[i]
+	if err != nil {
+		panic(err)
+	} else if ! fileExists {
+		panic(fmt.Sprintf("Path given is not a valid directory: %s", *repoPath))
+	}
+
+	repo, _ := git.PlainOpen(*repoPath)
+	head, _ := repo.Head()
+
+	if *from == "" {
+		*from = head.Hash().String()
+	}
+
+	commits := hashesToInspect(*repo, *from, *to)
+
+	for commitIndex := 0; commitIndex < len(commits); commitIndex++ {
+		currentCommit := commits[commitIndex]
 		changes := getDiff(currentCommit, *repo)
-		for j := 0; j < changes.Len(); j++ {
-			patch, _ := changes[j].Patch()
+
+		for changeIndex := 0; changeIndex < changes.Len(); changeIndex++ {
+			patch, _ := changes[changeIndex].Patch()
 
 			if JWT_REGEX.MatchString(patch.String()) {
 				dirtyCommits = append(dirtyCommits, currentCommit)
