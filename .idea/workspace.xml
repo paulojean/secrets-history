@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="6e5bf341-054c-4a5a-b0ab-d3cdb24e81e1" name="Default" comment="" />
+    <list default="true" id="6e5bf341-054c-4a5a-b0ab-d3cdb24e81e1" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/secrets_history.go" beforeDir="false" afterPath="$PROJECT_DIR$/secrets_history.go" afterDir="false" />
+    </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -15,11 +17,22 @@
       <file leaf-file-name="secrets_history.go" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/secrets_history.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="307">
-              <caret line="105" column="66" selection-start-line="105" selection-start-column="66" selection-end-line="105" selection-end-column="66" />
+            <state relative-caret-position="664">
+              <caret line="104" column="4" selection-start-line="104" selection-start-column="4" selection-end-line="104" selection-end-column="4" />
               <folding>
                 <element signature="e#14#175#0" expanded="true" />
+                <element signature="n#!!block;n#exists#0" />
+                <element signature="n#!!block;n#ensureRepoExists#0" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="reference.go" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/vendor/gopkg.in/src-d/go-git.v4/plumbing/reference.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="312">
+              <caret line="151" column="20" selection-start-line="151" selection-start-column="20" selection-end-line="151" selection-end-column="20" />
             </state>
           </provider>
         </entry>
@@ -27,7 +40,7 @@
       <file leaf-file-name="flag.go" pinned="false" current-in-tab="false">
         <entry file="file:///usr/lib/go/src/flag/flag.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="12978">
+            <state relative-caret-position="18">
               <caret line="731" column="5" selection-start-line="731" selection-start-column="5" selection-end-line="731" selection-end-column="5" />
             </state>
           </provider>
@@ -45,8 +58,8 @@
       <file leaf-file-name="repository.go" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/vendor/gopkg.in/src-d/go-git.v4/repository.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="14238">
-              <caret line="813" column="21" selection-start-line="813" selection-start-column="21" selection-end-line="813" selection-end-column="21" />
+            <state relative-caret-position="862">
+              <caret line="972" column="21" selection-start-line="972" selection-start-column="21" selection-end-line="972" selection-end-column="21" />
             </state>
           </provider>
         </entry>
@@ -122,8 +135,8 @@
         <option value="$PROJECT_DIR$/key_history.go" />
         <option value="$PROJECT_DIR$/glide.yaml" />
         <option value="$PROJECT_DIR$/glide.lock" />
-        <option value="$PROJECT_DIR$/secrets_history.go" />
         <option value="$PROJECT_DIR$/README.md" />
+        <option value="$PROJECT_DIR$/secrets_history.go" />
       </list>
     </option>
   </component>
@@ -373,6 +386,8 @@
           <caret line="105" column="66" selection-start-line="105" selection-start-column="66" selection-end-line="105" selection-end-column="66" />
           <folding>
             <element signature="e#14#175#0" expanded="true" />
+            <element signature="n#!!block;n#exists#0" />
+            <element signature="n#!!block;n#ensureRepoExists#0" />
           </folding>
         </state>
       </provider>
@@ -432,6 +447,8 @@
           <caret line="135" column="10" selection-start-line="135" selection-start-column="10" selection-end-line="135" selection-end-column="10" />
           <folding>
             <element signature="e#14#175#0" expanded="true" />
+            <element signature="n#!!block;n#exists#0" />
+            <element signature="n#!!block;n#ensureRepoExists#0" />
           </folding>
         </state>
       </provider>
@@ -484,6 +501,8 @@
           <caret line="96" column="35" selection-start-line="96" selection-start-column="35" selection-end-line="96" selection-end-column="35" />
           <folding>
             <element signature="e#14#175#0" expanded="true" />
+            <element signature="n#!!block;n#exists#0" />
+            <element signature="n#!!block;n#ensureRepoExists#0" />
           </folding>
         </state>
       </provider>
@@ -554,13 +573,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/vendor/gopkg.in/src-d/go-git.v4/repository.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="14238">
-          <caret line="813" column="21" selection-start-line="813" selection-start-column="21" selection-end-line="813" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/vendor/gopkg.in/src-d/go-git.v4/options.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="5670">
@@ -575,13 +587,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file:///usr/lib/go/src/flag/flag.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="12978">
-          <caret line="731" column="5" selection-start-line="731" selection-start-column="5" selection-end-line="731" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
@@ -592,12 +597,35 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/gopkg.in/src-d/go-git.v4/repository.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="862">
+          <caret line="972" column="21" selection-start-line="972" selection-start-column="21" selection-end-line="972" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/gopkg.in/src-d/go-git.v4/plumbing/reference.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="312">
+          <caret line="151" column="20" selection-start-line="151" selection-start-column="20" selection-end-line="151" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/lib/go/src/flag/flag.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="18">
+          <caret line="731" column="5" selection-start-line="731" selection-start-column="5" selection-end-line="731" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/secrets_history.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="307">
-          <caret line="105" column="66" selection-start-line="105" selection-start-column="66" selection-end-line="105" selection-end-column="66" />
+        <state relative-caret-position="664">
+          <caret line="104" column="4" selection-start-line="104" selection-start-column="4" selection-end-line="104" selection-end-column="4" />
           <folding>
             <element signature="e#14#175#0" expanded="true" />
+            <element signature="n#!!block;n#exists#0" />
+            <element signature="n#!!block;n#ensureRepoExists#0" />
           </folding>
         </state>
       </provider>

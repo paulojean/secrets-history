@@ -72,9 +72,9 @@ func hashesToInspect(repository git.Repository, from, to string) []string {
 
 	if to == "" {
 		return getAllHashesButInitial(log)
-	} else {
-		return getAllHashesUntil(log, to)
 	}
+
+	return getAllHashesUntil(log, to)
 }
 
 func exists(path string) (bool, error) {
@@ -88,6 +88,24 @@ func exists(path string) (bool, error) {
 	return true, err
 }
 
+func ensureRepositoryExists(path string) {
+	fileExists, err := exists(path)
+
+	if err != nil {
+		panic(err)
+	} else if ! fileExists {
+		panic(fmt.Sprintf("Path given is not a valid directory: %s", path))
+	}
+}
+
+func getStartCommit(head plumbing.Reference, from string) string {
+	if from == "" {
+		return head.Hash().String()
+	}
+	
+	return from
+}
+
 func main() {
 
 	JWT_REGEX := regexp.MustCompile(`eyJ[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]*`)
@@ -98,22 +116,14 @@ func main() {
 	to := flag.String("to", "", "final commit")
 	flag.Parse()
 
-	fileExists, err := exists(*repoPath)
-
-	if err != nil {
-		panic(err)
-	} else if ! fileExists {
-		panic(fmt.Sprintf("Path given is not a valid directory: %s", *repoPath))
-	}
+	ensureRepositoryExists(*repoPath)
 
 	repo, _ := git.PlainOpen(*repoPath)
 	head, _ := repo.Head()
 
-	if *from == "" {
-		*from = head.Hash().String()
-	}
+	startCommit := getStartCommit(*head, *from)
 
-	commits := hashesToInspect(*repo, *from, *to)
+	commits := hashesToInspect(*repo, startCommit, *to)
 
 	for commitIndex := 0; commitIndex < len(commits); commitIndex++ {
 		currentCommit := commits[commitIndex]
