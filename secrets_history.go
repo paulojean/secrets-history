@@ -1,16 +1,16 @@
 package main
 
 import (
+	"errors"
+	"flag"
+	"fmt"
+	"os"
+	"path/filepath"
+	"regexp"
 	"strings"
 	"gopkg.in/src-d/go-git.v4"
 	"gopkg.in/src-d/go-git.v4/plumbing"
 	"gopkg.in/src-d/go-git.v4/plumbing/object"
-	"os"
-	"regexp"
-	"flag"
-	"fmt"
-	"path/filepath"
-	"errors"
 )
 
 func getDiff(currentHash string, repo git.Repository) object.Changes {
