@@ -5,7 +5,7 @@ To find out if there's any commit with credentials on a given repository
 
 ## Usage
 ```sh
-secrets-history ./secrets-history -path=<path> [-from=<from> -to=<to>]
+secrets-history -path=<path> [-from=<from> -to=<to>]
 Options:
   -path         Path of of the local repository
   -from         Start commit to check [default: repository's head]
