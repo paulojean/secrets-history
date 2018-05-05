@@ -46,6 +46,21 @@ func TestHashesToInspectContainsAllCommitsOnRange(t *testing.T) {
 	}
 }
 
+func TestHashesToInspectDoesNotContainsMergeCommit(t *testing.T) {
+	mergeCommit := "96d52e2ec790afc40643c1e73899ac95bd9ab299"
+
+	repo, _ := git.PlainOpen(".")
+	from := "f2a5f5142316cc3f7b07ed235dbe07d378c5f2b4"
+
+	hashes, _ := hashesToInspect(*repo, from, "")
+
+	for _, hash := range hashes {
+		if hash == mergeCommit {
+			t.Errorf("Range contains merge commit")
+		}
+	}
+}
+
 func TestHashesToInspectContainsAllCommitsOnRangeWhenSpecifyLowerBound(t *testing.T) {
 	expectedHashes := []string{
 		"7e6a7f39324f8feb1c24562fb70650ead4e42604",
