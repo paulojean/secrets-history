@@ -10,6 +10,7 @@ import (
 	"flag"
 	"fmt"
 	"path/filepath"
+	"errors"
 )
 
 func getDiff(currentHash string, repo git.Repository) object.Changes {
@@ -28,8 +29,8 @@ func isNotMergeCommit(commit object.Commit) bool {
 	return commit.NumParents() <= 1
 }
 
-func isNotInitialCommit(commit object.Commit) bool {
-	return commit.NumParents() >= 1
+func isInitialCommit(commit object.Commit) bool {
+	return commit.NumParents() < 1
 }
 
 func takeCommitsUtil(commits object.CommitIter, takeUntilFn func(object.Commit) bool) (*object.Commit, []string) {
@@ -44,37 +45,50 @@ func takeCommitsUtil(commits object.CommitIter, takeUntilFn func(object.Commit) 
 	return currentCommit, hashes
 }
 
-func getAllHashesButInitial(commits object.CommitIter) []string {
+func getAllHashesButInitial(initialCommit object.Commit, commits object.CommitIter) []string {
+	start := []string{initialCommit.Hash.String()}
 	_, hashes := takeCommitsUtil(commits, func(commit object.Commit) bool {
-		return isNotInitialCommit(commit)
+		return ! isInitialCommit(commit)
 	})
 
-	return hashes
+	return append(start, hashes...)
 }
 
-func getAllHashesUntil(commits object.CommitIter, until string) []string {
+func getAllHashesUntil(initialCommit object.Commit, commits object.CommitIter, until string) []string {
+	start := []string{initialCommit.Hash.String()}
 	currentCommit, hashes := takeCommitsUtil(commits, func(commit object.Commit) bool {
 		return ! strings.HasPrefix(commit.Hash.String(), until)
 	})
 
 	hashes = append(hashes, currentCommit.Hash.String())
 
-	return hashes
+	return append(start, hashes...)
 }
 
-func hashesToInspect(repository git.Repository, from, to string) []string {
+func hashesToInspect(repository git.Repository, from, to string) ([]string, error) {
 	log, _ := repository.Log(&git.LogOptions{Order: git.LogOrderCommitterTime})
+	var err error
 
-	currentCommit, _ := log.Next()
-	for ! strings.HasPrefix(currentCommit.Hash.String(), from) {
-		currentCommit, _ = log.Next()
+	startCommit, _ := log.Next()
+	for ! strings.HasPrefix(startCommit.Hash.String(), from) {
+		startCommit, err = log.Next()
+
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	if startCommit.Hash.String() == to {
+		return nil, errors.New("`from` must not be equal to `to`")
+	} else if isInitialCommit(*startCommit) {
+		return nil, errors.New("`from` must not be the repository's initial commit")
 	}
 
 	if to == "" {
-		return getAllHashesButInitial(log)
+		return getAllHashesButInitial(*startCommit, log), nil
 	}
 
-	return getAllHashesUntil(log, to)
+	return getAllHashesUntil(*startCommit, log, to), nil
 }
 
 func exists(path string) (bool, error) {
@@ -88,14 +102,16 @@ func exists(path string) (bool, error) {
 	return true, err
 }
 
-func ensureRepositoryExists(path string) {
+func repositoryExists(path string) error {
 	fileExists, err := exists(path)
 
 	if err != nil {
-		panic(err)
+		return err
 	} else if ! fileExists {
-		panic(fmt.Sprintf("Path given is not a valid directory: %s", path))
+		return errors.New(fmt.Sprintf("Path given is not a valid directory: %s", path))
 	}
+
+	return nil
 }
 
 func getStartCommit(head plumbing.Reference, from string) string {
@@ -106,7 +122,7 @@ func getStartCommit(head plumbing.Reference, from string) string {
 	return from
 }
 
-func getDityCommits(repo git.Repository, commits []string, JWT_PATTERN regexp.Regexp) []string {
+func getDirtyCommits(repo git.Repository, commits []string, JWT_PATTERN regexp.Regexp) []string {
 	var dirtyCommits []string
 	for commitIndex := 0; commitIndex < len(commits); commitIndex++ {
 		currentCommit := commits[commitIndex]
@@ -134,15 +150,21 @@ func main() {
 
 	repoAbsolutePath, _ := filepath.Abs(*repoPath)
 
-	ensureRepositoryExists(repoAbsolutePath)
+	err := repositoryExists(repoAbsolutePath)
+	if err != nil {
+		panic(err)
+	}
 
 	repo, _ := git.PlainOpen(repoAbsolutePath)
 	head, _ := repo.Head()
 
 	startCommit := getStartCommit(*head, *from)
 
-	commits := hashesToInspect(*repo, startCommit, *to)
+	commits, err := hashesToInspect(*repo, startCommit, *to)
 
-	fmt.Println(getDityCommits(*repo, commits, *JWT_PATTERN))
+	if err != nil {
+		panic(err)
+	} else {
+		fmt.Println(getDirtyCommits(*repo, commits, *JWT_PATTERN))
+	}
 }
-

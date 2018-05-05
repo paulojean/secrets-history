@@ -15,6 +15,11 @@ Options:
 ## Dependencies
 [glide](https://github.com/Masterminds/glide)
 
+## Test
+```sh
+go test
+```
+
 ## Build
 ```sh
 glide install
