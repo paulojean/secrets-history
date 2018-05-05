@@ -31,31 +31,32 @@ func isNotInitialCommit(commit object.Commit) bool {
 	return commit.NumParents() >= 1
 }
 
-func getAllHashesButInitial(commits object.CommitIter) []string {
+func takeCommitsUtil(commits object.CommitIter, takeUntilFn func(object.Commit) bool) (*object.Commit, []string) {
 	var hashes []string
 	currentCommit, _ := commits.Next()
-
-	for isNotInitialCommit(*currentCommit) {
+	for takeUntilFn(*currentCommit) {
 		if isNotMergeCommit(*currentCommit) {
 			hashes = append(hashes, currentCommit.Hash.String())
 		}
-
 		currentCommit, _ = commits.Next()
 	}
+	return currentCommit, hashes
+}
+
+func getAllHashesButInitial(commits object.CommitIter) []string {
+	currentCommit, _ := commits.Next()
+
+	_, hashes := takeCommitsUtil(commits, func(commit object.Commit) bool {
+		return isNotInitialCommit(*currentCommit)
+	})
 
 	return hashes
 }
 
 func getAllHashesUntil(commits object.CommitIter, until string) []string {
-	var hashes []string
-
-	currentCommit, _ := commits.Next()
-	for ! strings.HasPrefix(currentCommit.Hash.String(), until) {
-		if isNotMergeCommit(*currentCommit) {
-			hashes = append(hashes, currentCommit.Hash.String())
-		}
-		currentCommit, _ = commits.Next()
-	}
+	currentCommit, hashes := takeCommitsUtil(commits, func(commit object.Commit) bool {
+		return ! strings.HasPrefix(commit.Hash.String(), until)
+	})
 
 	hashes = append(hashes, currentCommit.Hash.String())
 
@@ -102,7 +103,7 @@ func getStartCommit(head plumbing.Reference, from string) string {
 	if from == "" {
 		return head.Hash().String()
 	}
-	
+
 	return from
 }
 

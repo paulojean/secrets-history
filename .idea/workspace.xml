@@ -17,12 +17,13 @@
       <file leaf-file-name="secrets_history.go" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/secrets_history.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="664">
-              <caret line="104" column="4" selection-start-line="104" selection-start-column="4" selection-end-line="104" selection-end-column="4" />
+            <state relative-caret-position="396">
+              <caret line="46" selection-start-line="46" selection-end-line="46" />
               <folding>
                 <element signature="e#14#175#0" expanded="true" />
                 <element signature="n#!!block;n#exists#0" />
                 <element signature="n#!!block;n#ensureRepoExists#0" />
+                <element signature="n#!!block;n#getStartCommit#0" />
               </folding>
             </state>
           </provider>
@@ -388,6 +389,7 @@
             <element signature="e#14#175#0" expanded="true" />
             <element signature="n#!!block;n#exists#0" />
             <element signature="n#!!block;n#ensureRepoExists#0" />
+            <element signature="n#!!block;n#getStartCommit#0" />
           </folding>
         </state>
       </provider>
@@ -449,6 +451,7 @@
             <element signature="e#14#175#0" expanded="true" />
             <element signature="n#!!block;n#exists#0" />
             <element signature="n#!!block;n#ensureRepoExists#0" />
+            <element signature="n#!!block;n#getStartCommit#0" />
           </folding>
         </state>
       </provider>
@@ -503,6 +506,7 @@
             <element signature="e#14#175#0" expanded="true" />
             <element signature="n#!!block;n#exists#0" />
             <element signature="n#!!block;n#ensureRepoExists#0" />
+            <element signature="n#!!block;n#getStartCommit#0" />
           </folding>
         </state>
       </provider>
@@ -620,12 +624,13 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/secrets_history.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="664">
-          <caret line="104" column="4" selection-start-line="104" selection-start-column="4" selection-end-line="104" selection-end-column="4" />
+        <state relative-caret-position="396">
+          <caret line="46" selection-start-line="46" selection-end-line="46" />
           <folding>
             <element signature="e#14#175#0" expanded="true" />
             <element signature="n#!!block;n#exists#0" />
             <element signature="n#!!block;n#ensureRepoExists#0" />
+            <element signature="n#!!block;n#getStartCommit#0" />
           </folding>
         </state>
       </provider>
