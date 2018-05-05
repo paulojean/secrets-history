@@ -107,10 +107,26 @@ func getStartCommit(head plumbing.Reference, from string) string {
 	return from
 }
 
+func getDityCommits(repo git.Repository, commits []string, JWT_PATTERN regexp.Regexp) []string {
+	var dirtyCommits []string
+	for commitIndex := 0; commitIndex < len(commits); commitIndex++ {
+		currentCommit := commits[commitIndex]
+		changes := getDiff(currentCommit, repo)
+
+		for changeIndex := 0; changeIndex < changes.Len(); changeIndex++ {
+			patch, _ := changes[changeIndex].Patch()
+
+			if JWT_PATTERN.MatchString(patch.String()) {
+				dirtyCommits = append(dirtyCommits, currentCommit)
+			}
+		}
+	}
+	return dirtyCommits
+}
+
 func main() {
 
-	JWT_REGEX := regexp.MustCompile(`eyJ[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]*`)
-	var dirtyCommits []string
+	JWT_PATTERN := regexp.MustCompile(`eyJ[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]*`)
 
 	repoPath := flag.String("path", "", "path to a local git project")
 	from := flag.String("from", "", "start commit")
@@ -126,18 +142,6 @@ func main() {
 
 	commits := hashesToInspect(*repo, startCommit, *to)
 
-	for commitIndex := 0; commitIndex < len(commits); commitIndex++ {
-		currentCommit := commits[commitIndex]
-		changes := getDiff(currentCommit, *repo)
-
-		for changeIndex := 0; changeIndex < changes.Len(); changeIndex++ {
-			patch, _ := changes[changeIndex].Patch()
-
-			if JWT_REGEX.MatchString(patch.String()) {
-				dirtyCommits = append(dirtyCommits, currentCommit)
-			}
-		}
-	}
-
-	fmt.Println(dirtyCommits)
+	fmt.Println(getDityCommits(*repo, commits, *JWT_PATTERN))
 }
+
