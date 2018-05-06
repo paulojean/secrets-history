@@ -3,7 +3,6 @@ package main
 import (
 	"testing"
 	"gopkg.in/src-d/go-git.v4"
-	"regexp"
 )
 
 func TestWhenStartCommitIsEmptyReturnHeadHash(t *testing.T) {
@@ -118,7 +117,6 @@ func TestHashesToInspectFailsWhenFromIsEqualToInitialCommit(t *testing.T) {
 
 func TestDirtyCommitsBringsCommitsWithSecretsAddedAndRemoved(t *testing.T) {
 
-	JWT_PATTERN := regexp.MustCompile(`eyJ[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]*`)
 	expectedDirtyCommits := []string{
 		"140e081f12e3d462113912311c375f0d4ad1c7ec",
 		"43c37ddecac9a93301d15ee2d0a56edac8fb1ad9"}
@@ -137,8 +135,9 @@ func TestDirtyCommitsBringsCommitsWithSecretsAddedAndRemoved(t *testing.T) {
 		"80e33de42b562df4f3abb5a3c340409b9417471a",
 		"d644566ed7b990cff8b5a480bfdcc37bfa911916"}
 	repo, _ := git.PlainOpen(".")
+	patterns, _ := getCredentialPatterns("", true)
 
-	dirtyCommits := getDirtyCommits(*repo, commits, *JWT_PATTERN)
+	dirtyCommits := getDirtyCommits(*repo, commits, patterns)
 
 	commitsMatches := testEq(expectedDirtyCommits, dirtyCommits)
 	if ! commitsMatches {
