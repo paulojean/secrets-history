@@ -202,10 +202,10 @@ func getCredentialPatterns(securityPatternPath string, useDefault bool) ([]regex
 func main() {
 	var err error
 	repoPath := flag.String("path", "", "path to a local git project")
-	from := flag.String("from", "", "start commit")
+	from := flag.String("from", "", "start commit to search, ie: newest commit too look")
 	useDefaultPatterns := flag.Bool("default-patterns", true, "use default pattern credentials")
 	patternsDirectory := flag.String("credential-patterns", "", "json file to use custom patterns on search")
-	to := flag.String("to", "", "final commit")
+	to := flag.String("to", "", "final commit to search, ie: oldest commit to look")
 	flag.Parse()
 
 	if ! *useDefaultPatterns && *patternsDirectory == "" {
