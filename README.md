@@ -19,6 +19,8 @@ Usage of secrets-history:
     	start commit to search, ie: newest commit too look
   -path string
     	path to a local git project
+  -print-default-patterns
+    	print the file with the default credential patterns
   -to string
     	final commit to search, ie: oldest commit to look
 
