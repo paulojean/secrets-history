@@ -139,7 +139,7 @@ func TestDirtyCommitsBringsCommitsWithSecretsAddedAndRemoved(t *testing.T) {
 
 	dirtyCommits := getDirtyCommits(*repo, commits, patterns)
 
-	commitsMatches := testEq(expectedDirtyCommits, dirtyCommits)
+	commitsMatches := testEqInAnyOrder(expectedDirtyCommits, dirtyCommits)
 	if ! commitsMatches {
 		t.Errorf("Wrong dirtycommits")
 	}
