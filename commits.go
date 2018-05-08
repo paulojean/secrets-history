@@ -21,15 +21,16 @@ func getDirtyCommits(repo git.Repository, commits []string, credentialPatterns [
 	var dirtyCommitsSimple []string
 	var changesWg sync.WaitGroup
 
-	for _, commit := range commits {
+	for commitIndex := 0; commitIndex < len(commits); commitIndex++ {
 		changesWg.Add(1)
 
+		commit := commits[commitIndex]
 		changes := getDiff(commit, repo)
 		var wg sync.WaitGroup
 
 		go func() {
-			for _, change := range changes {
-				patch, _ := change.Patch()
+			for changeIndex := 0; changeIndex < changes.Len(); changeIndex++ {
+				patch, _ := changes[changeIndex].Patch()
 				go checkPatch(wg, dirtyCommits, credentialPatterns, patch, commit)
 			}
 
