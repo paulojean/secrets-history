@@ -11,7 +11,7 @@ type SecurityCredential struct {
 	Pattern string `json:"pattern"`
 }
 
-const DEFAULT_PATTERN_PATH = "./default_patterns.json"
+const DEFAULT_PATTERN_PATH = "resources/default_patterns.json"
 
 func getCredentialPatterns(securityPatternPath string, useDefault bool) ([]regexp.Regexp, error) {
 	var credentialsPatterns, defaultPatterns []SecurityCredential
@@ -25,7 +25,7 @@ func getCredentialPatterns(securityPatternPath string, useDefault bool) ([]regex
 	}
 
 	if useDefault {
-		defaultPatterns, err = parsePatternFile(DEFAULT_PATTERN_PATH)
+		defaultPatterns, err = parseDefaultPatternFile(DEFAULT_PATTERN_PATH)
 	}
 
 	if err != nil {
@@ -38,13 +38,20 @@ func getCredentialPatterns(securityPatternPath string, useDefault bool) ([]regex
 }
 
 func parsePatternFile(path string) ([]SecurityCredential, error) {
-	patterns, err := ioutil.ReadFile(path)
+	return parseFiles(ioutil.ReadFile(path))
+}
+
+func parseDefaultPatternFile(path string) ([]SecurityCredential, error) {
+	return parseFiles(Asset(path))
+}
+
+func parseFiles(data []byte, err error) ([]SecurityCredential, error) {
 	if err != nil {
 		return nil, err
 	}
 
 	var credentials []SecurityCredential
-	json.Unmarshal(patterns, &credentials)
+	json.Unmarshal(data, &credentials)
 	return credentials, nil
 }
 
