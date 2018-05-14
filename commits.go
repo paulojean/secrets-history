@@ -6,6 +6,7 @@ import (
 	"gopkg.in/src-d/go-git.v4/plumbing"
 	"gopkg.in/src-d/go-git.v4/plumbing/object"
 	"sync"
+	"strings"
 )
 
 func getStartCommit(head plumbing.Reference, from string) string {
@@ -52,7 +53,12 @@ func getDirtyCommits(repo git.Repository, commits []string, credentialPatterns [
 func checkPatch(wg sync.WaitGroup, dirtyCommits map[string]interface{}, credentialPatterns []regexp.Regexp, patch *object.Patch, currentCommit string) {
 	wg.Add(1)
 
-	if matchAny(credentialPatterns, patch.String()) {
+	additionsOnlyExpression := regexp.MustCompile(`(?m)^\+(.*)$`)
+
+	text := additionsOnlyExpression.FindAllString(patch.String(), -1)
+	additionsText := strings.Join(text, "\n")
+
+	if matchAny(credentialPatterns, additionsText) {
 		dirtyCommits[currentCommit] = currentCommit
 	}
 

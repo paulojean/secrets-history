@@ -118,7 +118,6 @@ func TestHashesToInspectFailsWhenFromIsEqualToInitialCommit(t *testing.T) {
 func TestDirtyCommitsBringsCommitsWithSecretsAddedAndRemoved(t *testing.T) {
 
 	expectedDirtyCommits := []string{
-		"140e081f12e3d462113912311c375f0d4ad1c7ec",
 		"43c37ddecac9a93301d15ee2d0a56edac8fb1ad9"}
 	commits := []string{
 		"3cbea9e48dc5c25bef1ccef8f4c526e9c612f51f",
