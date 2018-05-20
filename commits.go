@@ -5,8 +5,8 @@ import (
 	"gopkg.in/src-d/go-git.v4"
 	"gopkg.in/src-d/go-git.v4/plumbing"
 	"gopkg.in/src-d/go-git.v4/plumbing/object"
-	"sync"
 	"strings"
+	"sync"
 )
 
 func getStartCommit(head plumbing.Reference, from string) string {
@@ -53,12 +53,7 @@ func getDirtyCommits(repo git.Repository, commits []string, credentialPatterns [
 func checkPatch(wg sync.WaitGroup, dirtyCommits map[string]interface{}, credentialPatterns []regexp.Regexp, patch *object.Patch, currentCommit string) {
 	wg.Add(1)
 
-	additionsOnlyExpression := regexp.MustCompile(`(?m)^\+(.*)$`)
-
-	text := additionsOnlyExpression.FindAllString(patch.String(), -1)
-	additionsText := strings.Join(text, "\n")
-
-	if matchAny(credentialPatterns, additionsText) {
+	if matchAny(credentialPatterns, patch.String()) {
 		dirtyCommits[currentCommit] = currentCommit
 	}
 
@@ -78,11 +73,20 @@ func getDiff(currentHash string, repo git.Repository) object.Changes {
 }
 
 func matchAny(credentialPatterns []regexp.Regexp, text string) bool {
+	additionsText := additions(text)
+
 	for index := range credentialPatterns {
-		if credentialPatterns[index].MatchString(text) {
+		if credentialPatterns[index].MatchString(additionsText) {
 			return true
 		}
 	}
 
 	return false
+}
+
+func additions(text string) string {
+	additionsOnlyExpression := regexp.MustCompile(`(?m)^\+(.*)$`)
+	allAdditions := additionsOnlyExpression.FindAllString(text, -1)
+	additionsText := strings.Join(allAdditions, "\n")
+	return additionsText
 }
